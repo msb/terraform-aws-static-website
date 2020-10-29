@@ -61,3 +61,10 @@ For those reasons, the module includes an aliased provider definition to create 
 | Name | Description |
 |------|-------------|
 | website_cdn_root_id | CloudFront Distribution ID |
+
+## Multiple Websites
+
+If you wish to manage more the one website you will need to set the `lambda-exec-role-cloudfront-redirect-name`
+and `website-lambda-redirect-folder-index-name` variables to some other than the default. If you
+don't do this, the 2nd website you try to create will fail as it will try to create a lambda (and
+it's execution role) of the same name.
