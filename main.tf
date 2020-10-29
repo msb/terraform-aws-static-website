@@ -355,7 +355,7 @@ data "aws_iam_policy_document" "lambda_assume_role_policy" {
 
 # Create the IAM role that will be attached to the Lambda Function and associate it with the previously created policy
 resource "aws_iam_role" "lambda_exec_role_cloudfront_redirect" {
-  name = "LambdaExecRoleCloudFrontRedirect"
+  name = var.lambda-exec-role-cloudfront-redirect-name
   path = "/services-roles/"
 
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
@@ -386,9 +386,9 @@ data "archive_file" "cloudfront_folder_index_redirect_code" {
 # Creates the Lambda Function
 resource "aws_lambda_function" "website_lambda_redirect_folder_index" {
   provider         = aws.us-east-1 # Lambda@Edge invoked by CloudFront must reside in us-east-1
-  function_name    = "cloudfront-folder-index-redirect"
+  function_name    = var.website-lambda-redirect-folder-index-name
   description      = "Implements Default Directory Indexes in Amazon S3-backed Amazon CloudFront Origins"
-  handler          = "cloudfront_folder_index_redirect.handler"
+  handler          = "${var.website-lambda-redirect-folder-index-name}.handler"
   filename         = data.archive_file.cloudfront_folder_index_redirect_code.output_path
   source_code_hash = data.archive_file.cloudfront_folder_index_redirect_code.output_base64sha256
   role             = aws_iam_role.lambda_exec_role_cloudfront_redirect.arn
